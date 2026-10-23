@@ -37,7 +37,10 @@ after(() => {
 // this does not need updating when an unrelated entry is added.
 function fakeMenus(calls) {
   return new Proxy(
-    { configGroup: { startupConfig: {} } },
+    {
+      configGroup: { startupConfig: {} },
+      getUpdateStatus: () => ({ status: "unsupported", currentVersion: "1.0.0", newVersion: null }),
+    },
     {
       get(target, prop) {
         if (prop in target) return target[prop];

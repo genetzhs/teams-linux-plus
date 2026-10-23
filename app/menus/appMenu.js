@@ -2,6 +2,33 @@ const { shell } = require("electron");
 const buildProfilesMenu = require("./profilesMenu");
 const buildThemesMenu = require("./themesMenu");
 
+// Version line plus, in an AppImage, the update actions. The label tracks
+// the updater status, so the menu is rebuilt whenever that status changes.
+function getUpdateMenuItems(Menus) {
+  const { status, currentVersion, newVersion } = Menus.getUpdateStatus();
+  const suffix = {
+    checking: " (checking for updates…)",
+    latest: " (latest)",
+    downloading: ` (downloading ${newVersion}…)`,
+    ready: ` (${newVersion} ready)`,
+    error: " (update check failed)",
+  }[status] ?? "";
+  const items = [{ label: `Version ${currentVersion}${suffix}`, enabled: false }];
+  if (status === "ready") {
+    items.push({
+      label: `Restart & Update to ${newVersion}`,
+      click: () => Menus.restartToUpdate(),
+    });
+  } else if (status !== "unsupported") {
+    items.push({
+      label: "Check for Updates",
+      enabled: status !== "checking" && status !== "downloading",
+      click: () => Menus.checkForUpdates(),
+    });
+  }
+  return items;
+}
+
 exports = module.exports = (Menus) => ({
   label: "Teams for Linux",
   submenu: [
@@ -42,14 +69,7 @@ exports = module.exports = (Menus) => ({
       accelerator: "ctrl+R",
       click: () => Menus.reload(),
     },
-    ...(process.env.APPIMAGE
-      ? [
-          {
-            label: "Check for Updates",
-            click: () => Menus.checkForUpdates(),
-          },
-        ]
-      : []),
+    ...getUpdateMenuItems(Menus),
     {
       label: "Hide",
       accelerator: "ctrl+H",

@@ -67,7 +67,10 @@ before(() => {
     "../../app/profileDialogs/manageProfile",
   ]) replaceModule(name, class {});
   replaceModule("../../app/spellCheckProvider", { SpellCheckProvider: class {} });
-  replaceModule("../../app/autoUpdater", {});
+  replaceModule("../../app/autoUpdater", {
+    getStatus: () => ({ status: "unsupported", currentVersion: "1.0.0", newVersion: null }),
+    onStatusChange: () => () => {},
+  });
   for (const modulePath of [menusPath, appMenuPath, appConfigurationPath]) {
     originals.set(modulePath, require.cache[modulePath]);
     delete require.cache[modulePath];

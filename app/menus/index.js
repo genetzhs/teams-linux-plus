@@ -212,6 +212,9 @@ class Menus {
 
     this.initializeEventHandlers();
 
+    // The version line and update actions follow the updater status.
+    autoUpdaterModule.onStatusChange(() => this.#refreshUpdateItems());
+
     // Phase 1c.2: rebuild the menu when ProfilesManager state changes
     // (add/remove/switch/update) so the Profiles submenu and the active-
     // profile checkmark stay in sync. Listener subscription is gated on
@@ -799,6 +802,28 @@ class Menus {
 
   checkForUpdates() {
     autoUpdaterModule.checkForUpdates();
+  }
+
+  // Rebuilds the window and tray menus for a new update status. Unlike
+  // updateMenu() it leaves a removed menu bar (menubar "hidden" without
+  // multi-account) removed, and sends no config-changed to the renderer.
+  #refreshUpdateItems() {
+    if (this.window.isDestroyed()) return;
+    const menu = appMenu(this);
+    const hidden = this.configGroup.startupConfig.menubar === "hidden";
+    if (!hidden || this.#multiAccountOn()) {
+      this.#attachMenu(menu);
+      if (hidden) this.window.setMenuBarVisibility(false);
+    }
+    this.tray?.setContextMenu(menu.submenu);
+  }
+
+  getUpdateStatus() {
+    return autoUpdaterModule.getStatus();
+  }
+
+  restartToUpdate() {
+    autoUpdaterModule.restartAndInstall();
   }
 }
 
