@@ -22,11 +22,14 @@ function initialize(window) {
 
 	mainWindow = window;
 
-	updater().autoDownload = false;
-	updater().autoInstallOnAppQuit = false;
+	// Updates download in the background and install when the app quits, so
+	// the next launch runs the new version without asking.
+	updater().autoDownload = true;
+	updater().autoInstallOnAppQuit = true;
 
 	updater().on('update-available', onUpdateAvailable);
 	updater().on('update-not-available', onUpdateNotAvailable);
+	updater().on('update-downloaded', onUpdateDownloaded);
 	updater().on('error', onError);
 
 	console.info('[AutoUpdater] Checking for updates...');
@@ -47,29 +50,21 @@ function checkForUpdates() {
 	});
 }
 
-async function onUpdateAvailable(info) {
+function onUpdateAvailable(info) {
 	isChecking = false;
-	isManualCheck = false;
-
-	const currentVersion = app.getVersion();
-	const response = await dialog.showMessageBox(mainWindow, {
-		type: 'info',
-		title: 'Update Available',
-		message: `A new version (${info.version}) is available.\nYou are currently running version ${currentVersion}.`,
-		buttons: ['Download & Restart', 'Later'],
-		defaultId: 1,
-		cancelId: 1,
-	});
-
-	if (response.response === 0) {
-		try {
-			await updater().downloadUpdate();
-			updater().quitAndInstall();
-		} catch (err) {
-			console.error('[AutoUpdater] Download failed:', err.message);
-			showErrorDialog();
-		}
+	console.info(`[AutoUpdater] Downloading version ${info.version} in the background`);
+	if (isManualCheck) {
+		dialog.showMessageBox(mainWindow, {
+			type: 'info',
+			title: 'Update Available',
+			message: `Version ${info.version} is downloading.\nIt will be installed when you quit Teams for Linux.`,
+		});
 	}
+	isManualCheck = false;
+}
+
+function onUpdateDownloaded(info) {
+	console.info(`[AutoUpdater] Version ${info.version} downloaded; it installs when the app quits`);
 }
 
 function onUpdateNotAvailable() {
