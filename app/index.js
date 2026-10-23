@@ -11,9 +11,6 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 const CustomBackground = require("./customBackground");
 const CustomStickers = require("./customStickers");
-const { MQTTClient } = require("./mqtt");
-const MQTTMediaStatusService = require("./mqtt/mediaStatusService");
-const HomeAssistantDiscovery = require("./mqtt/homeAssistantDiscovery");
 const GraphApiClient = require("./graphApi");
 const { registerGraphApiHandlers } = require("./graphApi/ipcHandlers");
 const { allowedChannels } = require("./security/ipcValidator");
@@ -37,7 +34,6 @@ const TeamsControlService = require("./control/teamsControlService");
 const TeamsStateService = require("./control/teamsStateService");
 const IdleMonitor = require("./idle/monitor");
 const AutoUpdater = require("./autoUpdater");
-const WebAuthn = require("./webauthn");
 const os = require("node:os");
 const isMac = os.platform() === "darwin";
 
@@ -491,6 +487,11 @@ function handleShortcutCommand({ action, shortcut }) {
 }
 
 function initializeMqtt() {
+  // Loaded here rather than at the top: the mqtt package costs ~40ms of
+  // startup and most installs never enable MQTT.
+  const { MQTTClient } = require("./mqtt");
+  const MQTTMediaStatusService = require("./mqtt/mediaStatusService");
+  const HomeAssistantDiscovery = require("./mqtt/homeAssistantDiscovery");
   mqttClient = new MQTTClient(config);
 
   app.on('teams-microphone-control-changed', (state) => {
@@ -799,6 +800,7 @@ async function handleAppReady() {
     initializeMailView();
 
     if (process.platform === "linux" && config.auth?.webauthn?.enabled) {
+      const WebAuthn = require("./webauthn");
       await WebAuthn.initialize(mainAppWindow.getWindow(), config);
     }
 

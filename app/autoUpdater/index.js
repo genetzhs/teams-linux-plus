@@ -1,7 +1,14 @@
 'use strict';
 
 const { dialog, app } = require('electron');
-const { autoUpdater } = require('electron-updater');
+
+// electron-updater takes ~40ms to load and only does anything inside an
+// AppImage, so it is loaded on first use instead of at startup.
+let autoUpdater = null;
+function updater() {
+	autoUpdater ??= require('electron-updater').autoUpdater;
+	return autoUpdater;
+}
 
 let mainWindow = null;
 let isManualCheck = false;
@@ -15,16 +22,16 @@ function initialize(window) {
 
 	mainWindow = window;
 
-	autoUpdater.autoDownload = false;
-	autoUpdater.autoInstallOnAppQuit = false;
+	updater().autoDownload = false;
+	updater().autoInstallOnAppQuit = false;
 
-	autoUpdater.on('update-available', onUpdateAvailable);
-	autoUpdater.on('update-not-available', onUpdateNotAvailable);
-	autoUpdater.on('error', onError);
+	updater().on('update-available', onUpdateAvailable);
+	updater().on('update-not-available', onUpdateNotAvailable);
+	updater().on('error', onError);
 
 	console.info('[AutoUpdater] Checking for updates...');
 	isChecking = true;
-	autoUpdater.checkForUpdates().catch(err => {
+	updater().checkForUpdates().catch(err => {
 		console.error('[AutoUpdater] Startup check failed:', err.message);
 	});
 }
@@ -35,7 +42,7 @@ function checkForUpdates() {
 
 	isChecking = true;
 	isManualCheck = true;
-	autoUpdater.checkForUpdates().catch(err => {
+	updater().checkForUpdates().catch(err => {
 		console.error('[AutoUpdater] Manual check failed:', err.message);
 	});
 }
@@ -56,8 +63,8 @@ async function onUpdateAvailable(info) {
 
 	if (response.response === 0) {
 		try {
-			await autoUpdater.downloadUpdate();
-			autoUpdater.quitAndInstall();
+			await updater().downloadUpdate();
+			updater().quitAndInstall();
 		} catch (err) {
 			console.error('[AutoUpdater] Download failed:', err.message);
 			showErrorDialog();
