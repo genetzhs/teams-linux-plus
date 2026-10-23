@@ -43,14 +43,13 @@ function managerWithFakeWindow({ loadMs, loadError }) {
 			getURL: () => url,
 		},
 	};
-	// start() kicks off a refresh; keep it from running the connectivity sweep.
-	const realRefresh = manager.refresh;
-	manager.refresh = () => {};
+	// start() kicks off the initial load; keep it out of the logs under test.
+	manager.initialLoad = () => {};
 	manager.start('https://teams.cloud.microsoft', {
 		window,
 		config: { url: 'https://teams.cloud.microsoft' },
 	});
-	manager.refresh = realRefresh;
+	delete manager.initialLoad;
 	manager.isOnline = async () => true;
 	return { manager, setUrl: (value) => { url = value; }, reloadCount: () => reloads };
 }
@@ -111,6 +110,30 @@ describe('ConnectionManager initial page load timing', () => {
 		mock.timers.tick(1000);
 		await new Promise((r) => setImmediate(r));
 		assert.strictEqual(reloadCount(), 1, 'the failed load should schedule one debounced reload');
+	});
+
+	it('loads Teams on start without waiting for the connectivity check', async () => {
+		const ConnectionManager = require('../../app/connectionManager');
+		manager = new ConnectionManager();
+		let checks = 0;
+		manager.isOnline = async () => {
+			checks += 1;
+			return true;
+		};
+		let loads = 0;
+		manager.start('https://teams.cloud.microsoft', {
+			window: {
+				isDestroyed: () => false,
+				setTitle() {},
+				async loadURL() { loads += 1; },
+				webContents: { on() {}, removeListener() {}, getURL: () => '' },
+			},
+			config: { url: 'https://teams.cloud.microsoft' },
+		});
+		await new Promise((r) => setImmediate(r));
+
+		assert.strictEqual(loads, 1);
+		assert.strictEqual(checks, 0, 'the first load must not wait on the connectivity sweep');
 	});
 
 	it('reports how long the connectivity check waited before giving up', async () => {
