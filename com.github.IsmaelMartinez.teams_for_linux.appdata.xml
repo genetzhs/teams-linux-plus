@@ -14,6 +14,17 @@
   <url type="bugtracker">https://github.com/IsmaelMartinez/teams-for-linux/issues</url>
   <launchable type="desktop-id">com.github.IsmaelMartinez.teams_for_linux.desktop</launchable>
   <releases>
+    <release version="2.27.1" date="2026-10-23">
+      <description>
+        <ul>
+          <li>First Teams Linux Plus release: Outlook Mail in the main window (Ctrl+Alt+M)</li>
+          <li>Redesigned dialogs, toasts and prompts with light and dark themes, and a new icon</li>
+          <li>Faster on Linux: GPU kept on under XWayland, GPU rasterization, VA-API video, reduced motion</li>
+          <li>npm ci no longer stops when the optional cbor-extract rebuild fails</li>
+          <li>CI creates one draft release up front so every package lands in the same release</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.27.0" date="2026-10-19">
       <description>
         <ul>

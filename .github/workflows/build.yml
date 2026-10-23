@@ -117,8 +117,37 @@ jobs:
           path: test-results/
           retention-days: 7
 
-  linux_x64:
+  # Creates the draft release for this version once, before the package jobs
+  # run. Without it every job's electron-builder created its own draft at the
+  # same moment, and the packages ended up split across several drafts.
+  prepare_release:
     needs: [lint_and_audit]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Create the draft release if missing
+        run: |
+          version="$(node -p 'require("./package.json").version')"
+          tag="v${version}"
+          existing="$(gh release list --repo "$GITHUB_REPOSITORY" --limit 100 --json tagName,isDraft \
+            --jq "[.[] | select(.tagName == \"${tag}\")] | length")"
+          if [ "${existing}" != "0" ]; then
+            echo "Release ${tag} already exists; package jobs will upload to it."
+          else
+            gh release create "${tag}" --repo "$GITHUB_REPOSITORY" --draft \
+              --title "${version}" --target "$GITHUB_SHA" --notes ""
+            echo "Created draft release ${tag}."
+          fi
+
+  linux_x64:
+    needs: [lint_and_audit, prepare_release]
+    if: >-
+      always() && needs.lint_and_audit.result == 'success' &&
+      (needs.prepare_release.result == 'success' || needs.prepare_release.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -191,7 +220,10 @@ jobs:
           compression-level: 6
 
   linux_arm64:
-    needs: [lint_and_audit]
+    needs: [lint_and_audit, prepare_release]
+    if: >-
+      always() && needs.lint_and_audit.result == 'success' &&
+      (needs.prepare_release.result == 'success' || needs.prepare_release.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -238,7 +270,10 @@ jobs:
           compression-level: 6
 
   dmg:
-    needs: [lint_and_audit]
+    needs: [lint_and_audit, prepare_release]
+    if: >-
+      always() && needs.lint_and_audit.result == 'success' &&
+      (needs.prepare_release.result == 'success' || needs.prepare_release.result == 'skipped')
     runs-on: macos-latest
     permissions:
       contents: write
@@ -314,7 +349,10 @@ jobs:
           compression-level: 0
 
   exe:
-    needs: [lint_and_audit]
+    needs: [lint_and_audit, prepare_release]
+    if: >-
+      always() && needs.lint_and_audit.result == 'success' &&
+      (needs.prepare_release.result == 'success' || needs.prepare_release.result == 'skipped')
     runs-on: windows-latest
     permissions:
       contents: write
