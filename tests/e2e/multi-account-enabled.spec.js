@@ -218,3 +218,53 @@ test('switching to a profile view fills the window and keeps the pill topmost', 
     await closeAndCleanup(ctx);
   }
 });
+
+// The Teams/Mail switcher (app/mailView) shares Teams' left-rail column with
+// the profile pill: it must sit directly above the pill, never overlap it,
+// and keep both clickable after a profile switch re-raises the pill.
+test('mail switcher stacks above the profile pill without overlapping', async () => {
+  const ctx = await startApp({
+    prefix: 'teams-e2e-mail-switcher-',
+    config: { multiAccount: { enabled: true } },
+    allowEval: true,
+  });
+
+  try {
+    const mainWindow = findMainTeamsWindow(ctx.electronApp);
+    expect(mainWindow).toBeTruthy();
+    await waitForLoginRedirect(mainWindow);
+
+    const a = await invokeHandler(ctx.electronApp, 'profile-add', [
+      { name: 'Profile A' },
+    ]);
+    expect(a).toHaveProperty('result');
+    await invokeHandler(ctx.electronApp, 'profile-switch', [a.result.id]);
+
+    const view = await getContentViewChildBounds(ctx.electronApp, {
+      includeMailSwitcher: true,
+    });
+    expect(view).not.toHaveProperty('error');
+    const mailIndex = view.urls.findIndex((u) => /mailView\/switcher\.html$/.test(u ?? ''));
+    const pillIndex = view.urls.findIndex((u) => /profileSwitcher\/switcher\.html$/.test(u ?? ''));
+    expect(mailIndex).toBeGreaterThanOrEqual(0);
+    expect(pillIndex).toBeGreaterThanOrEqual(0);
+
+    const mail = view.bounds[mailIndex];
+    const pill = view.bounds[pillIndex];
+    expect(mail.x).toBe(0);
+    expect(mail.width).toBe(SWITCHER_PILL_SIZE);
+    // Directly above the pill, no overlap.
+    expect(mail.y + mail.height).toBeLessThanOrEqual(pill.y);
+    expect(pill.y - (mail.y + mail.height)).toBeLessThan(SWITCHER_PILL_SIZE);
+
+    // Both small overlays stay above the visible profile view.
+    const profileIndex = view.visible.findIndex(
+      (visible, i) => visible && i !== mailIndex && i !== pillIndex
+    );
+    expect(profileIndex).toBeGreaterThanOrEqual(0);
+    expect(mailIndex).toBeGreaterThan(profileIndex);
+    expect(pillIndex).toBeGreaterThan(profileIndex);
+  } finally {
+    await closeAndCleanup(ctx);
+  }
+});

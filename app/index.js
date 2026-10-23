@@ -880,7 +880,8 @@ async function setBadgeCountHandler(event, count) {
 }
 
 // Created after ProfileViewManager so its switcher starts above the profile
-// pill; stacked 48px higher when that pill exists.
+// pill; stacked one pill-height higher when that pill exists, so the two
+// transparent views never overlap.
 function initializeMailView() {
   const mainWindow = mainAppWindow.getWindow();
   if (!config.mail?.enabled || !mainWindow) return;
@@ -888,7 +889,7 @@ function initializeMailView() {
     focusTeams: profileViewManager
       ? () => profileViewManager.getActiveWebContents()?.focus()
       : undefined,
-    switcherOffset: profileViewManager ? 48 : 0,
+    switcherOffset: profileViewManager ? ProfileViewManager.SWITCHER_PILL_SIZE : 0,
   });
   mailViewManager.initialize();
   mainAppWindow.setMailViewManager(mailViewManager);

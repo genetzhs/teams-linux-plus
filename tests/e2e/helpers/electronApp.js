@@ -147,9 +147,16 @@ export async function getEventHandlerCounts(electronApp, channels) {
  * switcher chrome strip). Returns `{ count, bounds }` where `bounds` is the
  * array of each child's `getBounds()` in z-order (last = topmost), or
  * `{ error }` if the main window can't be found.
+ *
+ * The Teams/Mail switcher button (app/mailView) is left out unless
+ * `includeMailSwitcher` is set, so profile assertions only see profile views
+ * and the profile pill.
  */
-export async function getContentViewChildBounds(electronApp) {
-  return await electronApp.evaluate(({ BrowserWindow }) => {
+export async function getContentViewChildBounds(
+  electronApp,
+  { includeMailSwitcher = false } = {}
+) {
+  return await electronApp.evaluate(({ BrowserWindow }, includeMail) => {
     const hosts = new Set([
       'teams.cloud.microsoft',
       'teams.microsoft.com',
@@ -166,7 +173,16 @@ export async function getContentViewChildBounds(electronApp) {
     const all = BrowserWindow.getAllWindows();
     const win = all.find(isMain) || all[0];
     if (!win) return { error: 'no main window' };
-    const children = win.contentView.children || [];
+    const isMailSwitcher = (c) => {
+      try {
+        return /mailView\/switcher\.html$/.test(c.webContents?.getURL() ?? '');
+      } catch {
+        return false;
+      }
+    };
+    const children = (win.contentView.children || []).filter(
+      (c) => includeMail || !isMailSwitcher(c)
+    );
     const [contentWidth, contentHeight] = win.getContentSize();
     return {
       count: children.length,
@@ -182,7 +198,7 @@ export async function getContentViewChildBounds(electronApp) {
         }
       }),
     };
-  });
+  }, includeMailSwitcher);
 }
 
 /**
