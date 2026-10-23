@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Settings</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <header class="brand">
+          <img src="icon.png" alt="" width="36" height="36" />
+          <div>
+            <strong>Teams for Linux</strong>
+            <span class="version" data-info="version">—</span>
+          </div>
+        </header>
+
+        <nav class="nav" role="tablist" aria-orientation="vertical" aria-label="Settings sections">
+          <button role="tab" data-panel="general" aria-selected="true">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z" /></svg>
+            General
+          </button>
+          <button role="tab" data-panel="mail">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" /><path d="m3.5 7.5 8.5 6 8.5-6" /></svg>
+            Mail
+          </button>
+          <button role="tab" data-panel="notifications">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15Z" /><path d="M10 20.5a2 2 0 0 0 4 0" /></svg>
+            Notifications
+          </button>
+          <button role="tab" data-panel="appearance">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17Z" fill="currentColor" stroke="none" /></svg>
+            Appearance
+          </button>
+          <button role="tab" data-panel="performance">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6Z" /></svg>
+            Performance
+          </button>
+          <button role="tab" data-panel="advanced">
+            <svg class="icon" viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14" /></svg>
+            Advanced
+          </button>
+          <button role="tab" data-panel="about">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><path d="M12 11v5.5M12 7.6v.1" /></svg>
+            About
+          </button>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <div class="banner" hidden role="alert">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v4h-4" /></svg>
+          <span>Some changes take effect after a restart.</span>
+          <button class="btn small primary" data-action="restart">Restart now</button>
+        </div>
+
+        <section class="panel" id="general" role="tabpanel">
+          <h1>General</h1>
+          <p class="sub">How the app starts and behaves on your desktop.</p>
+          <div class="card">
+            <label class="row">
+              <div class="text"><strong>Close to tray</strong><span>Closing the window keeps Teams running in the background.</span></div>
+              <input type="checkbox" class="switch" role="switch" data-key="closeToTray" />
+            </label>
+            <label class="row">
+              <div class="text"><strong>Start minimized</strong><span>Launch straight to the tray without showing the window.</span></div>
+              <input type="checkbox" class="switch" role="switch" data-key="startMinimized" />
+            </label>
+          </div>
+          <h2>Teams</h2>
+          <div class="card">
+            <div class="row stack">
+              <div class="text"><strong>Teams address</strong><span>Change for GCC, GCC High or Teams for personal use.</span></div>
+              <input type="url" class="field" data-key="url" data-restart spellcheck="false" />
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="mail" role="tabpanel" hidden>
+          <h1>Mail</h1>
+          <p class="sub">Outlook on the web, side by side with Teams in one window.</p>
+          <div class="card">
+            <label class="row">
+              <div class="text"><strong>Show Mail</strong><span>Adds Mail to the sidebar. It only loads the first time you open it, so it costs nothing until then.</span></div>
+              <input type="checkbox" class="switch" role="switch" data-key="mailEnabled" />
+            </label>
+            <div class="row stack">
+              <div class="text"><strong>Mail address</strong><span>Use https://outlook.live.com/mail/ for a personal Outlook.com account.</span></div>
+              <input type="url" class="field" data-key="mailUrl" data-restart spellcheck="false" />
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="notifications" role="tabpanel" hidden>
+          <h1>Notifications</h1>
+          <p class="sub">Desktop notifications for chats, calls and mail.</p>
+          <div class="card">
+            <label class="row">
+              <div class="text"><strong>Desktop notifications</strong><span>Shown only when the app is in the background.</span></div>
+              <input type="checkbox" class="switch" role="switch" data-key="notifications" />
+            </label>
+            <label class="row">
+              <div class="text"><strong>Show message preview</strong><span>Turn off to hide message content on your lock screen and in screen shares.</span></div>
+              <input type="checkbox" class="switch" role="switch" data-key="notificationPreview" />
+            </label>
+            <label class="row">
+              <div class="text"><strong>Unread badge on tray icon</strong><span>A red dot on the tray icon when you have unread activity.</span></div>
+              <input type="checkbox" class="switch" role="switch" data-key="trayBadge" />
+            </label>
+          </div>
+        </section>
+
+        <section class="panel" id="appearance" role="tabpanel" hidden>
+          <h1>Appearance</h1>
+          <p class="sub">Theme of the app's own windows and page zoom.</p>
+          <div class="card">
+            <div class="row">
+              <div class="text"><strong>Theme</strong><span>Teams and Outlook follow their own theme setting.</span></div>
+              <div class="segmented" role="radiogroup" aria-label="Theme">
+                <label><input type="radio" name="theme" value="system" data-key="theme" /><span>System</span></label>
+                <label><input type="radio" name="theme" value="light" data-key="theme" /><span>Light</span></label>
+                <label><input type="radio" name="theme" value="dark" data-key="theme" /><span>Dark</span></label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="text"><strong>Zoom</strong><span>Also Ctrl + / Ctrl − / Ctrl 0 inside Teams.</span></div>
+              <div class="range">
+                <input type="range" min="0.5" max="2" step="0.1" data-key="zoom" aria-label="Zoom" />
+                <output data-output="zoom">100%</output>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="performance" role="tabpanel" hidden>
+          <h1>Performance</h1>
+          <p class="sub">Live memory use and the knobs that trade speed for RAM.</p>
+
+          <div class="meter card">
+            <div class="meter-head">
+              <div>
+                <span class="meter-label">Memory in use</span>
+                <strong class="meter-total" data-usage="total">—</strong>
+              </div>
+              <span class="pill" data-usage="processes">—</span>
+            </div>
+            <div class="bar" aria-hidden="true"><span class="bar-app"></span><span class="bar-web"></span></div>
+            <div class="legend">
+              <span><i class="swatch app"></i>App shell <b data-usage="app">—</b></span>
+              <span><i class="swatch web"></i>Web content <b data-usage="web">—</b></span>
+            </div>
+          </div>
+
+          <div class="card">
+            <label class="row">
+              <div class="text"><strong>Low memory mode</strong><span>Smaller in-memory cache and no back/forward page cache. Recommended.</span></div>
+              <input type="checkbox" class="switch" role="switch" data-key="lowMemory" data-restart />
+            </label>
+            <div class="row">
+              <div class="text"><strong>GPU acceleration</strong><span>Turn off if you see flickering or a blank window. "On" also enables the DMA-BUF renderer, which some drivers do not support.</span></div>
+              <div class="segmented" role="radiogroup" aria-label="GPU acceleration">
+                <label><input type="radio" name="gpu" value="auto" data-key="gpu" data-restart /><span>Auto</span></label>
+                <label><input type="radio" name="gpu" value="always" data-key="gpu" data-restart /><span>On</span></label>
+                <label><input type="radio" name="gpu" value="never" data-key="gpu" data-restart /><span>Off</span></label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="advanced" role="tabpanel" hidden>
+          <h1>Advanced</h1>
+          <p class="sub">For troubleshooting and customisation.</p>
+          <div class="card">
+            <div class="row stack">
+              <div class="text"><strong>User agent</strong><span>Leave empty to use the built-in Edge on Linux user agent.</span></div>
+              <input type="text" class="field" data-key="userAgent" data-restart spellcheck="false" placeholder="Default" />
+            </div>
+            <div class="row stack">
+              <div class="text"><strong>Custom CSS</strong><span>Injected into Teams and Outlook. Use with care: their markup changes often.</span></div>
+              <textarea class="field" data-key="customCss" data-restart spellcheck="false" placeholder="/* e.g. hide the Copilot button */"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="about" role="tabpanel" hidden>
+          <h1>About</h1>
+          <p class="sub">Unofficial Microsoft Teams client for Linux.</p>
+          <div class="card">
+            <div class="row"><div class="text"><strong>Version</strong></div><span class="value" data-info="version">—</span></div>
+            <div class="row"><div class="text"><strong>Tauri</strong></div><span class="value" data-info="tauri">—</span></div>
+            <div class="row"><div class="text"><strong>WebKitGTK</strong></div><span class="value" data-info="webkit">—</span></div>
+          </div>
+          <div class="links">
+            <button class="btn small" data-link="https://github.com/IsmaelMartinez/teams-for-linux">Source code</button>
+            <button class="btn small" data-link="https://github.com/IsmaelMartinez/teams-for-linux/issues">Report an issue</button>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="common.js"></script>
+    <script src="settings.js"></script>
+  </body>
+</html>

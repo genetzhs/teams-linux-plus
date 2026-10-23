@@ -1,0 +1,91 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* The view is transparent; only the button paints. */
+html,
+body {
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+  font-family: "Segoe UI", Cantarell, "Noto Sans", system-ui, sans-serif;
+}
+
+/* Same column and size as the profile switcher pill (12px from the left). */
+.toggle {
+  position: fixed;
+  left: 12px;
+  bottom: 8px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 12px;
+  background: #5b5fc7;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 120ms cubic-bezier(0.2, 0, 0, 1), background 120ms;
+}
+
+.toggle:hover {
+  background: #4f52b2;
+}
+
+.toggle:active {
+  transform: scale(0.94);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid #5b5fc7;
+  outline-offset: 2px;
+}
+
+.icon {
+  grid-area: 1 / 1;
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 160ms, transform 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* In Teams the button offers Mail; in Mail it offers the way back. */
+.icon.teams,
+body.mail .icon.mail {
+  opacity: 0;
+  transform: scale(0.6) rotate(-20deg);
+}
+
+body.mail .icon.teams {
+  opacity: 1;
+  transform: none;
+}
+
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: #d13438;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+}
+
+.badge[hidden] {
+  display: none;
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "mail-bridge",
+  "description": "Outlook on the web gets the same minimal bridge as Teams.",
+  "webviews": ["mail"],
+  "remote": {
+    "urls": [
+      "https://outlook.office.com",
+      "https://outlook.office365.com",
+      "https://outlook.cloud.microsoft",
+      "https://outlook.live.com"
+    ]
+  },
+  "permissions": [
+    "allow-notify",
+    "allow-open-external",
+    "allow-set-zoom",
+    "allow-open-window",
+    "allow-switch-view"
+  ]
+}

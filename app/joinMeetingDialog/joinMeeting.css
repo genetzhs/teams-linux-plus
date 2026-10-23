@@ -1,0 +1,5 @@
+/* Join Meeting dialog. Base look comes from ../_shared/ui/theme.css. */
+
+.ui-dialog {
+    gap: 18px;
+}

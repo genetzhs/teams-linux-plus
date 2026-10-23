@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="176 184 672 672" color="#000000">
+  <!-- Monochrome tray glyph: the app icon's bubble with the T cut out, no tile,
+       so it reads at 16px. render.sh sets the root color to white for the
+       light variant. -->
+  <defs>
+    <mask id="cut">
+      <rect x="0" y="0" width="1024" height="1024" fill="#FFFFFF"/>
+      <path fill="#000000" d="M 400 362 H 624 A 38 38 0 0 1 624 438 H 550 V 572 A 38 38 0 0 1 474 572 V 438 H 400 A 38 38 0 0 1 400 362 Z"/>
+    </mask>
+  </defs>
+  <g fill="currentColor" mask="url(#cut)">
+    <rect x="224" y="232" width="576" height="484" rx="168"/>
+    <path d="M 312 620 L 286 782 C 282 808 306 820 326 806 L 476 700 Z"/>
+  </g>
+</svg>

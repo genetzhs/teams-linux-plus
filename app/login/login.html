@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login Dialog</title>
+    <link rel="stylesheet" href="../_shared/ui/theme.css" />
+    <link rel="stylesheet" href="../_shared/ui/prompt.css" />
+  </head>
+
+  <body>
+    <h3>Sign in</h3>
+    <p>This server needs your username and password.</p>
+    <form name="form" onSubmit="JavaScript:sendForm(event)">
+      <input
+        type="text"
+        name="username"
+        id="username"
+        aria-label="Username"
+        value=""
+        placeholder="Email or DOMAIN\username"
+        type="email"
+        autofocus
+      />
+      <input
+        type="password"
+        name="password"
+        id="password"
+        aria-label="Password"
+        value=""
+        placeholder="Password"
+      />
+      <div class="buttons">
+        <input type="submit" value="Sign in" />
+      </div>
+    </form>
+
+    <script>
+      function sendForm(event) {
+        event.preventDefault();
+        globalThis.api.submitForm({
+          username: document.getElementById("username").value,
+          password: document.getElementById("password").value,
+        });
+      }
+    </script>
+  </body>
+</html>

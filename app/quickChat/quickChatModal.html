@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Chat</title>
+    <link rel="stylesheet" href="../_shared/ui/theme.css">
+    <style>
+        /* Tokens and base styles come from ../_shared/ui/theme.css. */
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+            box-shadow: var(--shadow-lg);
+            animation: ui-rise 200ms var(--ease);
+        }
+
+        header {
+            padding: 16px 16px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        header h2 {
+            margin-bottom: 12px;
+            font-size: 15px;
+            font-weight: 650;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 38px;
+            padding: 0 12px;
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            outline: none;
+            background: var(--bg);
+            transition: border-color 120ms var(--ease), box-shadow 120ms var(--ease);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-subtle);
+        }
+
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 6px;
+        }
+
+        .contact-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 10px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: background 120ms var(--ease);
+        }
+
+        .contact-item:hover,
+        .contact-item:focus-visible {
+            background: var(--surface-hover);
+        }
+
+        .contact-item:active {
+            background: var(--accent-soft);
+        }
+
+        .contact-avatar {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5b5fc7, #8a8cf8);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .contact-name,
+        .contact-email,
+        .contact-title,
+        .compose-recipient-name,
+        .compose-recipient-email {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .contact-name {
+            font-weight: 600;
+        }
+
+        .contact-email {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .contact-title {
+            margin-top: 1px;
+            color: var(--text-subtle);
+            font-size: 11px;
+        }
+
+        .empty-state,
+        .loading-state {
+            padding: 28px 24px;
+            color: var(--text-muted);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .error-state {
+            padding: 16px;
+            color: var(--danger);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        footer {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-top: 1px solid var(--border);
+            color: var(--text-subtle);
+            font-size: 11px;
+        }
+
+        footer img {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+        }
+
+        .keyboard-hint {
+            margin-left: auto;
+        }
+
+        kbd {
+            padding: 1px 6px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--surface-2);
+            font-family: inherit;
+            font-size: 10.5px;
+        }
+
+        .compose-view {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .compose-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .compose-back-btn {
+            padding: 4px 8px;
+            border: 0;
+            border-radius: var(--radius-sm);
+            background: none;
+            color: var(--text-muted);
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .compose-back-btn:hover {
+            background: var(--surface-hover);
+            color: var(--text);
+        }
+
+        .compose-recipient {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .compose-recipient-name {
+            font-weight: 600;
+        }
+
+        .compose-recipient-email {
+            color: var(--text-muted);
+            font-size: 11.5px;
+        }
+
+        .compose-body {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px 16px 14px;
+        }
+
+        .compose-input {
+            flex: 1;
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            outline: none;
+            background: var(--bg);
+            resize: none;
+            transition: border-color 120ms var(--ease), box-shadow 120ms var(--ease);
+        }
+
+        .compose-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .compose-input::placeholder {
+            color: var(--text-subtle);
+        }
+
+        .compose-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .compose-status {
+            flex: 1;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .compose-status.success {
+            color: var(--success);
+        }
+
+        .compose-status.error {
+            color: var(--danger);
+        }
+
+        .compose-send-btn {
+            height: 34px;
+            padding: 0 20px;
+            border: 0;
+            border-radius: var(--radius-sm);
+            background: var(--accent);
+            color: var(--accent-text);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 120ms var(--ease), transform 80ms var(--ease);
+        }
+
+        .compose-send-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .compose-send-btn:active {
+            transform: scale(0.98);
+        }
+
+        .compose-send-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h2>Quick Chat</h2>
+        <div class="search-container">
+            <input
+                type="text"
+                id="search-input"
+                class="search-input"
+                aria-label="Search contacts"
+                placeholder="Search contacts..."
+                autocomplete="off"
+                spellcheck="false"
+            >
+        </div>
+    </header>
+
+    <main>
+        <div id="loading" class="loading-state" style="display: none;">
+            Searching...
+        </div>
+        <div id="error" class="error-state" style="display: none;"></div>
+        <div id="empty" class="empty-state">
+            Type to search for contacts
+        </div>
+        <ul id="contacts" class="contact-list" style="display: none;"></ul>
+    </main>
+
+    <div id="compose-view" class="compose-view">
+        <div class="compose-header">
+            <button id="compose-back" class="compose-back-btn" title="Back to search">&larr;</button>
+            <div class="compose-recipient">
+                <div id="compose-name" class="compose-recipient-name"></div>
+                <div id="compose-email" class="compose-recipient-email"></div>
+            </div>
+        </div>
+        <div class="compose-body">
+            <textarea
+                id="compose-input"
+                class="compose-input"
+                aria-label="Message"
+                placeholder="Type a message..."
+                rows="4"
+            ></textarea>
+            <div class="compose-footer">
+                <span id="compose-status" class="compose-status"></span>
+                <button id="compose-send" class="compose-send-btn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <img src="../assets/icons/icon-16x16.png" alt="logo">
+        <span>Teams for Linux</span>
+        <span class="keyboard-hint"><kbd>Esc</kbd> to close</span>
+    </footer>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const contactsList = document.getElementById('contacts');
+        const loadingEl = document.getElementById('loading');
+        const errorEl = document.getElementById('error');
+        const emptyEl = document.getElementById('empty');
+
+        let searchTimeout = null;
+        let currentContacts = [];
+
+        // Extract email from a contact object (People API response)
+        function getContactEmail(contact) {
+            if (!contact) return '';
+            return contact.scoredEmailAddresses?.[0]?.address ||
+                   contact.userPrincipalName ||
+                   contact.emailAddresses?.[0]?.address || '';
+        }
+
+        // Get initials from name
+        function getInitials(name) {
+            if (!name) return '?';
+            const parts = name.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return name[0].toUpperCase();
+        }
+
+        // Show state helpers
+        function showLoading() {
+            loadingEl.style.display = 'block';
+            contactsList.style.display = 'none';
+            errorEl.style.display = 'none';
+            emptyEl.style.display = 'none';
+        }
+
+        function showError(message) {
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            loadingEl.style.display = 'none';
+            contactsList.style.display = 'none';
+            emptyEl.style.display = 'none';
+        }
+
+        function showEmpty(message = 'Type to search for contacts') {
+            emptyEl.textContent = message;
+            emptyEl.style.display = 'block';
+            loadingEl.style.display = 'none';
+            contactsList.style.display = 'none';
+            errorEl.style.display = 'none';
+        }
+
+        function showContacts(contacts) {
+            currentContacts = contacts;
+            contactsList.innerHTML = '';
+
+            if (contacts.length === 0) {
+                showEmpty('No contacts found');
+                return;
+            }
+
+            for (const contact of contacts) {
+                const li = document.createElement('li');
+                li.className = 'contact-item';
+                li.tabIndex = 0;
+
+                const email = getContactEmail(contact);
+                const displayName = contact.displayName || 'Unknown';
+                const contactId = contact.id;
+
+                // Create avatar
+                const avatar = document.createElement('div');
+                avatar.className = 'contact-avatar';
+                avatar.textContent = getInitials(displayName);
+
+                // Create contact info container
+                const contactInfo = document.createElement('div');
+                contactInfo.className = 'contact-info';
+
+                // Create name element
+                const nameEl = document.createElement('div');
+                nameEl.className = 'contact-name';
+                nameEl.textContent = displayName;
+                contactInfo.appendChild(nameEl);
+
+                // Create email element if present
+                if (email) {
+                    const emailEl = document.createElement('div');
+                    emailEl.className = 'contact-email';
+                    emailEl.textContent = email;
+                    contactInfo.appendChild(emailEl);
+                }
+
+                // Create job title element if present
+                if (contact.jobTitle) {
+                    const titleEl = document.createElement('div');
+                    titleEl.className = 'contact-title';
+                    titleEl.textContent = contact.jobTitle;
+                    contactInfo.appendChild(titleEl);
+                }
+
+                // Assemble the list item
+                li.appendChild(avatar);
+                li.appendChild(contactInfo);
+
+                li.addEventListener('click', () => openChat(email, displayName, contactId));
+                li.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        openChat(email, displayName, contactId);
+                    }
+                });
+
+                contactsList.appendChild(li);
+            }
+
+            contactsList.style.display = 'block';
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'none';
+            emptyEl.style.display = 'none';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Compose view elements
+        const composeView = document.getElementById('compose-view');
+        const composeName = document.getElementById('compose-name');
+        const composeEmail = document.getElementById('compose-email');
+        const composeInput = document.getElementById('compose-input');
+        const composeStatus = document.getElementById('compose-status');
+        const composeSendBtn = document.getElementById('compose-send');
+        const composeBackBtn = document.getElementById('compose-back');
+        const searchView = document.querySelector('header');
+        const mainView = document.querySelector('main');
+        const footerView = document.querySelector('footer');
+
+        let selectedContact = null;
+
+        function showComposeView(name, email, userId) {
+            selectedContact = { name, email, userId };
+            composeName.textContent = name || email;
+            composeEmail.textContent = email;
+            composeInput.value = '';
+            composeStatus.textContent = '';
+            composeStatus.className = 'compose-status';
+            composeSendBtn.disabled = false;
+
+            searchView.style.display = 'none';
+            mainView.style.display = 'none';
+            footerView.style.display = 'none';
+            composeView.style.display = 'flex';
+            composeInput.focus();
+        }
+
+        function hideComposeView() {
+            selectedContact = null;
+            composeView.style.display = 'none';
+            searchView.style.display = '';
+            mainView.style.display = '';
+            footerView.style.display = '';
+            searchInput.focus();
+
+            // Restore previous contacts if available
+            if (currentContacts.length > 0) {
+                showContacts(currentContacts);
+            }
+        }
+
+        async function sendMessage() {
+            const content = composeInput.value.trim();
+            if (!content || !selectedContact) return;
+
+            composeSendBtn.disabled = true;
+            composeStatus.textContent = 'Sending...';
+            composeStatus.className = 'compose-status';
+
+            try {
+                const contactInfo = { userId: selectedContact.userId, displayName: selectedContact.name };
+                const result = await globalThis.quickChatApi.sendMessage(contactInfo, content);
+                if (result.success) {
+                    composeStatus.textContent = 'Message sent!';
+                    composeStatus.className = 'compose-status success';
+                    composeInput.value = '';
+                    composeSendBtn.disabled = false;
+                } else {
+                    composeStatus.textContent = 'Failed: ' + (result.error || 'Unknown error');
+                    composeStatus.className = 'compose-status error';
+                    composeSendBtn.disabled = false;
+                }
+            } catch (error) {
+                composeStatus.textContent = 'Failed: ' + error.message;
+                composeStatus.className = 'compose-status error';
+                composeSendBtn.disabled = false;
+            }
+        }
+
+        composeSendBtn.addEventListener('click', sendMessage);
+
+        composeInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        composeBackBtn.addEventListener('click', hideComposeView);
+
+        function openChat(email, contactName, userId) {
+            if (!email) {
+                showError('No email address available for this contact');
+                return;
+            }
+            showComposeView(contactName, email, userId);
+        }
+
+        // Search with debounce
+        async function performSearch(query) {
+            if (!query || query.length < 2) {
+                showEmpty('Type at least 2 characters to search');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                const result = await globalThis.quickChatApi.searchPeople(query);
+
+                if (result.success && result.data?.value) {
+                    showContacts(result.data.value);
+                } else if (result.error) {
+                    if (result.error.includes('Graph API not enabled')) {
+                        showError('Enable Graph API in config to use Quick Chat');
+                    } else {
+                        showError('Search failed: ' + result.error);
+                    }
+                } else {
+                    showContacts([]);
+                }
+            } catch (error) {
+                showError('Search failed: ' + error.message);
+            }
+        }
+
+        // Handle search input
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim();
+
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+
+            if (query.length < 2) {
+                showEmpty(query.length === 0 ? 'Type to search for contacts' : 'Type at least 2 characters to search');
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        });
+
+        // Handle keyboard navigation
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                const firstContact = contactsList.querySelector('.contact-item');
+                if (firstContact) {
+                    firstContact.focus();
+                }
+            } else if (e.key === 'Enter' && currentContacts.length > 0) {
+                e.preventDefault();
+                const firstContact = currentContacts[0];
+                const email = getContactEmail(firstContact);
+                if (email) {
+                    openChat(email, firstContact.displayName, firstContact.id);
+                }
+            }
+        });
+
+        // Handle arrow key navigation in contacts list
+        contactsList.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                const next = e.target.nextElementSibling;
+                if (next) {
+                    next.focus();
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                const prev = e.target.previousElementSibling;
+                if (prev) {
+                    prev.focus();
+                } else {
+                    searchInput.focus();
+                }
+            }
+        });
+
+        // Focus search input when modal is shown
+        globalThis.quickChatApi.onFocus(() => {
+            hideComposeView();
+            searchInput.value = '';
+            showEmpty('Type to search for contacts');
+            searchInput.focus();
+        });
+
+        // Initial focus
+        searchInput.focus();
+    </script>
+</body>
+
+</html>

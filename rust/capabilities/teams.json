@@ -1,0 +1,20 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "teams-bridge",
+  "description": "The remote Teams page only gets the small bridge surface: notifications, links, zoom and switching views. No config or filesystem access.",
+  "webviews": ["teams"],
+  "remote": {
+    "urls": [
+      "https://teams.microsoft.com",
+      "https://teams.cloud.microsoft",
+      "https://teams.live.com"
+    ]
+  },
+  "permissions": [
+    "allow-notify",
+    "allow-open-external",
+    "allow-set-zoom",
+    "allow-open-window",
+    "allow-switch-view"
+  ]
+}
