@@ -14,6 +14,58 @@ Teams Linux Plus is a fork of [Teams for Linux](https://github.com/IsmaelMartine
 > [!NOTE]
 > This is an independent project, not affiliated with Microsoft or with the upstream Teams for Linux project. Some features are limited by the Teams web app.
 
+## Screenshots
+
+The app's own windows, in light and dark (they follow your system theme):
+
+![Join meeting, incoming call and notification](docs/screenshots/dialogs.png)
+
+![Quick Chat](docs/screenshots/quick-chat.png)
+
+![Screen-share picker](docs/screenshots/screen-share.png)
+
+![Manage profiles](docs/screenshots/profiles.png)
+
+## Install
+
+Download the file for your system from the [latest release](https://github.com/genetzhs/teams-linux-plus/releases/latest).
+
+### AppImage (any Linux distribution)
+
+```bash
+chmod +x teams-for-linux-*.AppImage
+./teams-for-linux-*.AppImage
+```
+
+No installation needed. **Check for Updates** in the app menu fetches new versions from this repository's releases.
+
+### Debian / Ubuntu (.deb)
+
+```bash
+sudo apt install ./teams-for-linux_*_amd64.deb
+```
+
+### Fedora / openSUSE (.rpm)
+
+```bash
+sudo dnf install ./teams-for-linux-*.x86_64.rpm
+```
+
+### Other Linux (.tar.gz)
+
+```bash
+tar xzf teams-for-linux-*.tar.gz
+./teams-for-linux-*/teams-for-linux
+```
+
+ARM64 builds (`arm64` / `aarch64`) are in the same release.
+
+### macOS (.dmg) and Windows (.exe)
+
+Open the `.dmg` and drag the app to Applications, or run the `.exe` installer. These builds are not signed, so macOS asks you to allow the app in **System Settings → Privacy & Security**, and Windows SmartScreen needs **More info → Run anyway**.
+
+All packages keep the `teams-for-linux` name and settings folder (`~/.config/teams-for-linux`), so they replace an existing Teams for Linux install and keep your sign-in and settings.
+
 ## Run from source
 
 You need Node.js 24 (see `.nvmrc`) and git.
@@ -27,14 +79,11 @@ npm start
 
 If the optional native module `cbor-extract` fails to compile, `npm ci` warns and carries on; the app does not need it.
 
-## Build packages
+To build the packages yourself:
 
 ```bash
-npm run dist:linux      # AppImage, deb, rpm, snap in dist/
-sudo apt install ./dist/teams-for-linux_*_amd64.deb
+npm run dist:linux      # AppImage, deb, rpm and tar.gz in dist/
 ```
-
-The packaged app keeps the `teams-for-linux` name and settings folder (`~/.config/teams-for-linux`), so it replaces an existing Teams for Linux install and keeps your sign-in and settings.
 
 ## Configuration
 
