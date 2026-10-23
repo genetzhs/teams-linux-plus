@@ -1021,8 +1021,9 @@ module.exports = {
           enabled: true,
           url: "https://outlook.office.com/mail/",
           showSwitcher: true,
+          preload: false,
         },
-        describe: "Outlook Mail inside the main window, switchable with Teams. Loaded only the first time it is opened",
+        describe: "Outlook Mail inside the main window, switchable with Teams. Loaded the first time it is opened, or in the background after Teams with preload",
         type: "object",
         fields: {
           "enabled": {
@@ -1039,6 +1040,11 @@ module.exports = {
             type: "boolean",
             describe:
               "Show the floating Teams/Mail switcher button in the bottom-left corner.",
+          },
+          "preload": {
+            type: "boolean",
+            describe:
+              "Load Outlook in the background a few seconds after Teams, so the first switch to Mail is instant. Costs the memory of Outlook (roughly 400-600 MB) from startup.",
           },
         },
         applyMode: "restart",

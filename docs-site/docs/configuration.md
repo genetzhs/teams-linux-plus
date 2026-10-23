@@ -880,13 +880,14 @@ All topics except `incoming-call/caller` use retained messages, ensuring subscri
 
 ### Mail
 
-Outlook on the web inside the main window. Switch with the button in the bottom-left corner, `Ctrl+Alt+M`, or **Mail** in the menu and tray. Mail is only loaded the first time you open it, uses the same sign-in as Teams, and opens links from emails in your browser.
+Outlook on the web inside the main window. Switch with the button in the bottom-left corner, `Ctrl+Alt+M`, or **Mail** in the menu and tray. Mail is loaded the first time you open it (or in the background with `mail.preload`), uses the same sign-in as Teams, and opens links from emails in your browser.
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `mail.enabled` | `boolean` | `true` | Offer Outlook Mail in the main window |
 | `mail.url` | `string` | `"https://outlook.office.com/mail/"` | Outlook address; use `https://outlook.live.com/mail/` for a personal Outlook.com account |
 | `mail.showSwitcher` | `boolean` | `true` | Show the floating Teams/Mail switcher button |
+| `mail.preload` | `boolean` | `false` | Load Outlook in the background after Teams so the first switch is instant; uses roughly 400-600 MB more memory from startup |
 
 ### Performance & Hardware
 

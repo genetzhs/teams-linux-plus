@@ -28,12 +28,13 @@ Menu accelerators do not reach a focused `WebContentsView`, so the chord is also
   "mail": {
     "enabled": true,
     "url": "https://outlook.office.com/mail/",
-    "showSwitcher": true
+    "showSwitcher": true,
+    "preload": false
   }
 }
 ```
 
-Use `https://outlook.live.com/mail/` for a personal Outlook.com account.
+Use `https://outlook.live.com/mail/` for a personal Outlook.com account. Set `preload` to load Outlook hidden five seconds after Teams finishes loading, so the first switch is instant at the cost of Outlook's memory from startup.
 
 ## IPC
 

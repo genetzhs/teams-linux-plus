@@ -1142,9 +1142,10 @@
       "default": {
         "enabled": true,
         "url": "https://outlook.office.com/mail/",
-        "showSwitcher": true
+        "showSwitcher": true,
+        "preload": false
       },
-      "description": "Outlook Mail inside the main window, switchable with Teams. Loaded only the first time it is opened",
+      "description": "Outlook Mail inside the main window, switchable with Teams. Loaded the first time it is opened, or in the background after Teams with preload",
       "applyMode": "restart",
       "fields": [
         {
@@ -1164,6 +1165,12 @@
           "type": "boolean",
           "default": true,
           "description": "Show the floating Teams/Mail switcher button in the bottom-left corner."
+        },
+        {
+          "path": "preload",
+          "type": "boolean",
+          "default": false,
+          "description": "Load Outlook in the background a few seconds after Teams, so the first switch to Mail is instant. Costs the memory of Outlook (roughly 400-600 MB) from startup."
         }
       ]
     },

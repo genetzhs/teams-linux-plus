@@ -94,7 +94,8 @@ Settings live in `~/.config/teams-for-linux/config.json`. The options added here
   "mail": {
     "enabled": true,
     "url": "https://outlook.office.com/mail/",
-    "showSwitcher": true
+    "showSwitcher": true,
+    "preload": false
   },
   "media": {
     "linuxPerformanceMode": true,

@@ -6,6 +6,9 @@ const { createMailWindowOpenHandler } = require("./windowOpenPolicy");
 // square in Teams' left-rail column, so nothing in Teams is covered.
 const SWITCHER_SIZE = 56;
 
+// How long after Teams finishes loading mail.preload starts loading Outlook.
+const PRELOAD_DELAY_MS = 5000;
+
 function isMailToggleChord(input) {
   return (
     input.type === "keyDown" &&
@@ -23,7 +26,7 @@ function isMailToggleChord(input) {
  * The Mail view is a `WebContentsView` overlay on the root window, on the same
  * session partition as Teams so the Microsoft sign-in carries over. It is only
  * created the first time Mail is opened, so users who never open it pay no
- * memory for it. Once created it stays attached and is shown or hidden: a view
+ * memory for it, unless `mail.preload` loads it hidden shortly after Teams. Once created it stays attached and is shown or hidden: a view
  * attached after loading paints but gets no input on Linux (#3057).
  *
  * Outlook needs no access to our code, so the view has no preload and runs
@@ -40,6 +43,7 @@ class MailViewManager {
   #teamsUnread = 0;
   #resizeHandler = null;
   #toggleHandler = null;
+  #preloadTimer = null;
 
   /**
    * @param {Electron.BrowserWindow} window  Main app window
@@ -83,7 +87,22 @@ class MailViewManager {
     if (this.#config.mail?.showSwitcher !== false) {
       this.#createSwitcher();
     }
+    if (this.#config.mail?.preload === true) {
+      // Wait for Teams so Outlook does not compete with it for the network
+      // and CPU during startup.
+      this.#window.webContents.once("did-finish-load", () => {
+        this.#preloadTimer = setTimeout(() => this.preload(), PRELOAD_DELAY_MS);
+      });
+    }
     this.#window.once("closed", () => this.dispose());
+  }
+
+  /** Load Outlook hidden, so the first switch to Mail is instant. */
+  preload() {
+    this.#preloadTimer = null;
+    if (!this.enabled || this.#view || this.#window.isDestroyed()) return;
+    this.#createView();
+    this.#view.setVisible(false);
   }
 
   dispose() {
@@ -91,6 +110,8 @@ class MailViewManager {
       this.#window.removeListener("resize", this.#resizeHandler);
       this.#resizeHandler = null;
     }
+    clearTimeout(this.#preloadTimer);
+    this.#preloadTimer = null;
     if (this.#toggleHandler) {
       ipcMain.removeListener("mail-switcher-toggle", this.#toggleHandler);
       this.#toggleHandler = null;
