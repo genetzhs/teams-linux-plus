@@ -1,0 +1,102 @@
+/*
+ * Small credential prompts (secure prompt, security-key PIN and touch, NTLM
+ * login): plain h3 / p / input / .buttons markup styled on the tokens in
+ * theme.css, so the pages keep their minimal HTML.
+ */
+
+body {
+  padding: 18px 20px 16px;
+  animation: ui-rise 220ms var(--ease);
+}
+
+h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+p,
+output {
+  display: block;
+  margin: 0 0 12px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+p.warning {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-weight: 600;
+}
+
+input[type="password"],
+input[type="text"],
+input[type="email"] {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  transition: border-color 120ms var(--ease), box-shadow 120ms var(--ease);
+}
+
+input[type="password"]:focus,
+input[type="text"]:focus,
+input[type="email"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+input + input {
+  margin-top: 10px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+button,
+input[type="submit"] {
+  min-width: 88px;
+  height: 34px;
+  padding: 0 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms var(--ease), transform 80ms var(--ease);
+}
+
+button:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+
+button:active:not(:disabled),
+input[type="submit"]:active {
+  transform: scale(0.98);
+}
+
+button.primary,
+input[type="submit"] {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+button.primary:hover:not(:disabled),
+input[type="submit"]:hover {
+  background: var(--accent-hover);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

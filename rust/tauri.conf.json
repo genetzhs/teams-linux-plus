@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Teams for Linux",
+  "mainBinaryName": "teams-for-linux-rs",
+  "version": "0.1.0",
+  "identifier": "com.github.IsmaelMartinez.teams_for_linux_rs",
+  "build": {
+    "frontendDist": "ui"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["deb", "rpm", "appimage"],
+    "category": "Network",
+    "shortDescription": "Microsoft Teams for Linux",
+    "longDescription": "Unofficial lightweight Microsoft Teams client for Linux built on the system WebView.",
+    "icon": ["icons/icon.png"],
+    "linux": {
+      "deb": { "depends": ["libwebkit2gtk-4.1-0", "libayatana-appindicator3-1"] }
+    }
+  }
+}

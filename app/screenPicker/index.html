@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+<head>
+  <title>Screen Picker</title>
+  <link rel="stylesheet" href="../_shared/ui/theme.css">
+  <style>
+    body {
+      padding: 20px 22px;
+    }
+    h1 {
+      margin-bottom: 14px;
+      font-size: 17px;
+      font-weight: 650;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .source {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: border-color 120ms var(--ease), transform 120ms var(--ease);
+    }
+    .source:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .source img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      background: var(--surface-2);
+    }
+    .source p {
+      overflow: hidden;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Choose what to share</h1>
+  <div class="container" id="sources-container"></div>
+
+  <script src="./renderer.js"></script>
+</body>
+</html>

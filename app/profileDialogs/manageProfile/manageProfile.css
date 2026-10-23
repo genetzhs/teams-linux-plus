@@ -1,0 +1,197 @@
+/* Manage profiles dialog. Tokens and base styles come from ../../_shared/ui/theme.css. */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  padding: 22px 24px 20px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  animation: ui-rise 240ms var(--ease);
+}
+
+h2 {
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin-bottom: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.profile-list {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+}
+
+.profile-row + .profile-row {
+  border-top: 1px solid var(--border);
+}
+
+.profile-row.active {
+  background: color-mix(in srgb, var(--accent-soft) 55%, transparent);
+}
+
+.profile-avatar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 650;
+  user-select: none;
+}
+
+.profile-name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: text;
+}
+
+.profile-name:hover,
+.profile-name:focus {
+  outline: none;
+  background: var(--surface-hover);
+}
+
+.profile-name-input {
+  flex: 1 1 auto;
+  /* Override the input's intrinsic minimum so the row (now also holding the
+     pin button) can shrink instead of overflowing in rename mode. */
+  min-width: 0;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  outline: none;
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.profile-name-input.invalid {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px var(--danger-soft);
+}
+
+.profile-active-badge {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-soft-text);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.profile-pin-btn,
+.profile-remove-btn {
+  flex: 0 0 auto;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 120ms var(--ease);
+}
+
+.profile-pin-btn.pinned {
+  border-color: transparent;
+  background: var(--accent-soft);
+  color: var(--accent-soft-text);
+}
+
+.profile-pin-btn:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+
+.profile-pin-btn.pinned:hover:not(:disabled) {
+  background: var(--accent-soft);
+  filter: brightness(0.97);
+}
+
+.profile-remove-btn {
+  border-color: transparent;
+  background: transparent;
+  color: var(--danger);
+}
+
+.profile-remove-btn:hover:not(:disabled) {
+  background: var(--danger-soft);
+}
+
+.profile-pin-btn:disabled,
+.profile-remove-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.error {
+  min-height: 18px;
+  color: var(--danger);
+  font-size: 12.5px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+button.primary {
+  min-width: 92px;
+  height: 34px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms var(--ease);
+}
+
+button.primary:hover {
+  background: var(--accent-hover);
+}

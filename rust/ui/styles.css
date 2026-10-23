@@ -1,0 +1,365 @@
+/* Teams for Linux design system: one token set, light + dark, no web fonts. */
+
+:root {
+  color-scheme: light;
+  --font: "Inter", "Segoe UI Variable Text", "Segoe UI", Cantarell, "Noto Sans", system-ui, sans-serif;
+  --mono: "JetBrains Mono", "Cascadia Code", "DejaVu Sans Mono", ui-monospace, monospace;
+
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --surface-2: #f0f0f4;
+  --surface-hover: #ebebf0;
+  --border: #e3e3e9;
+  --border-strong: #cfcfd8;
+  --text: #1b1b1f;
+  --text-muted: #62626e;
+  --text-subtle: #8a8a96;
+
+  --accent: #5b5fc7;
+  --accent-hover: #4f52b2;
+  --accent-text: #ffffff;
+  --accent-soft: #e8e9fa;
+  --accent-soft-text: #444791;
+
+  --danger: #d13438;
+  --danger-soft: #fdecec;
+  --warning-soft: #fff6e5;
+  --warning-text: #8a5300;
+  --success: #13a10e;
+
+  --rail-bg: #ebebf1;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 8px 32px rgb(0 0 0 / 0.16);
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --focus: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #18181b;
+    --surface: #212126;
+    --surface-2: #2a2a30;
+    --surface-hover: #303037;
+    --border: #34343b;
+    --border-strong: #46464f;
+    --text: #f2f2f5;
+    --text-muted: #a6a6b2;
+    --text-subtle: #7c7c88;
+    --accent: #7f85f5;
+    --accent-hover: #9297f7;
+    --accent-text: #121216;
+    --accent-soft: #2f3057;
+    --accent-soft-text: #c5c7fa;
+    --danger: #f1707b;
+    --danger-soft: #3d2326;
+    --warning-soft: #3a2f1a;
+    --warning-text: #f5c26b;
+    --rail-bg: #121215;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.25);
+    --shadow-lg: 0 8px 32px rgb(0 0 0 / 0.5);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #18181b;
+  --surface: #212126;
+  --surface-2: #2a2a30;
+  --surface-hover: #303037;
+  --border: #34343b;
+  --border-strong: #46464f;
+  --text: #f2f2f5;
+  --text-muted: #a6a6b2;
+  --text-subtle: #7c7c88;
+  --accent: #7f85f5;
+  --accent-hover: #9297f7;
+  --accent-text: #121216;
+  --accent-soft: #2f3057;
+  --accent-soft-text: #c5c7fa;
+  --danger: #f1707b;
+  --danger-soft: #3d2326;
+  --warning-soft: #3a2f1a;
+  --warning-text: #f5c26b;
+  --rail-bg: #121215;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.25);
+  --shadow-lg: 0 8px 32px rgb(0 0 0 / 0.5);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 var(--font);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  cursor: default;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+svg.icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms var(--ease), border-color 120ms var(--ease), transform 80ms var(--ease);
+}
+
+.btn:hover {
+  background: var(--surface-hover);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn.primary {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--accent-text);
+}
+
+.btn.primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.btn.small {
+  height: 30px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+/* ---------- Inputs ---------- */
+
+.field {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  user-select: text;
+  transition: border-color 120ms var(--ease), box-shadow 120ms var(--ease);
+}
+
+textarea.field {
+  height: auto;
+  min-height: 120px;
+  padding: 10px 12px;
+  font: 12.5px/1.5 var(--mono);
+  resize: vertical;
+}
+
+.field:hover {
+  border-color: var(--text-subtle);
+}
+
+.field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.field[aria-invalid="true"] {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px var(--danger-soft);
+}
+
+/* Switch: <input type="checkbox" class="switch" role="switch"> */
+.switch {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 22px;
+  margin: 0;
+  border-radius: 999px;
+  background: var(--border-strong);
+  cursor: pointer;
+  transition: background 160ms var(--ease);
+}
+
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  transition: transform 180ms var(--ease);
+}
+
+.switch:checked {
+  background: var(--accent);
+}
+
+.switch:checked::after {
+  transform: translateX(18px);
+}
+
+/* Segmented control: .segmented > label > input[type=radio] + span */
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.segmented label {
+  position: relative;
+}
+
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented span {
+  display: block;
+  padding: 5px 14px;
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 140ms var(--ease), color 140ms var(--ease);
+}
+
+.segmented input:checked + span {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.segmented input:focus-visible + span {
+  box-shadow: var(--focus);
+}
+
+/* Range */
+.range {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.range input {
+  width: 180px;
+  accent-color: var(--accent);
+}
+
+.range output {
+  min-width: 44px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* ---------- Toast ---------- */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translate(-50%, 12px);
+  pointer-events: none;
+  transition: opacity 180ms var(--ease), transform 220ms var(--ease);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.toast.error {
+  background: var(--danger);
+  color: #fff;
+}

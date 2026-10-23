@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Join a meeting</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="join.css" />
+  </head>
+  <body>
+    <form class="join" novalidate>
+      <div class="hero" aria-hidden="true">
+        <svg class="icon" viewBox="0 0 24 24">
+          <rect x="2.5" y="6" width="13" height="12" rx="2.5" />
+          <path d="m15.5 10.5 6-3.5v10l-6-3.5" />
+        </svg>
+      </div>
+      <h1>Join a meeting</h1>
+      <p class="lead">Paste the meeting link from your invite or calendar.</p>
+
+      <label class="sr-only" for="link">Meeting link</label>
+      <input
+        id="link"
+        class="field"
+        type="url"
+        placeholder="https://teams.microsoft.com/l/meetup-join/…"
+        autocomplete="off"
+        spellcheck="false"
+        aria-describedby="hint"
+        autofocus
+      />
+      <p id="hint" class="hint" aria-live="polite">Links starting with msteams: work too.</p>
+
+      <div class="actions">
+        <button type="button" class="btn" data-action="cancel">Cancel</button>
+        <button type="submit" class="btn primary" disabled>Join</button>
+      </div>
+    </form>
+    <script src="common.js"></script>
+    <script src="join.js"></script>
+  </body>
+</html>

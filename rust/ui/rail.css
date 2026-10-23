@@ -1,0 +1,161 @@
+body {
+  background: var(--rail-bg);
+  overflow: hidden;
+}
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 14px 0 12px;
+  gap: 6px;
+}
+
+.logo {
+  margin-bottom: 14px;
+  border-radius: 8px;
+}
+
+.apps {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.app {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+  padding: 7px 0 6px;
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+/* Active indicator pill on the left edge. */
+.app::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent);
+  transform: translateY(-50%);
+  transition: height 200ms var(--ease);
+}
+
+.app[aria-selected="true"]::before {
+  height: 28px;
+}
+
+.glyph {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 32px;
+  border-radius: 10px;
+  transition: background 140ms var(--ease), color 140ms var(--ease);
+}
+
+.glyph .icon {
+  width: 22px;
+  height: 22px;
+}
+
+.app:hover .glyph {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.app[aria-selected="true"] {
+  color: var(--accent);
+}
+
+.app[aria-selected="true"] .glyph {
+  background: var(--accent-soft);
+  color: var(--accent-soft-text);
+}
+
+.app[aria-selected="true"] .icon {
+  stroke-width: 2;
+}
+
+.label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.app:focus-visible {
+  box-shadow: none;
+}
+
+.app:focus-visible .glyph {
+  box-shadow: var(--focus);
+}
+
+.badge {
+  position: absolute;
+  top: -3px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border: 2px solid var(--rail-bg);
+  border-radius: 999px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  animation: pop 220ms var(--ease);
+}
+
+.badge.dot {
+  top: -1px;
+  right: 2px;
+  min-width: 12px;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+}
+
+.tool {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 140ms var(--ease), color 140ms var(--ease);
+}
+
+.tool:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}

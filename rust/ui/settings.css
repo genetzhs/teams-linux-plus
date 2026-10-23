@@ -1,0 +1,287 @@
+.layout {
+  display: grid;
+  grid-template-columns: 232px 1fr;
+  height: 100%;
+}
+
+/* ---------- Sidebar ---------- */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  padding: 18px 12px;
+  border-right: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 8px 18px;
+}
+
+.brand img {
+  border-radius: 9px;
+}
+
+.brand strong {
+  display: block;
+  font-size: 14px;
+}
+
+.version {
+  color: var(--text-subtle);
+  font-size: 12px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background 120ms var(--ease), color 120ms var(--ease);
+}
+
+.nav .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.nav button:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.nav button[aria-selected="true"] {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.nav button[aria-selected="true"] .icon {
+  color: var(--accent);
+}
+
+/* ---------- Content ---------- */
+
+.content {
+  overflow-y: auto;
+  padding: 28px 36px 48px;
+  scrollbar-gutter: stable;
+}
+
+.panel {
+  max-width: 620px;
+  animation: fade 220ms var(--ease);
+}
+
+.panel h1 {
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+
+.panel h2 {
+  margin: 26px 0 8px 2px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sub {
+  margin: 4px 0 20px;
+  color: var(--text-muted);
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.card + .card {
+  margin-top: 14px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 60px;
+  padding: 12px 18px;
+}
+
+.row + .row {
+  border-top: 1px solid var(--border);
+}
+
+label.row {
+  cursor: pointer;
+}
+
+.row.stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.text strong {
+  font-weight: 600;
+}
+
+.text span {
+  color: var(--text-muted);
+  font-size: 12.5px;
+}
+
+.value {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  user-select: text;
+}
+
+.links {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* ---------- Restart banner ---------- */
+
+.banner {
+  position: sticky;
+  top: -28px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 620px;
+  margin: -12px 0 20px;
+  padding: 10px 10px 10px 14px;
+  border-radius: var(--radius);
+  background: var(--warning-soft);
+  color: var(--warning-text);
+  font-weight: 500;
+  box-shadow: var(--shadow);
+  animation: fade 220ms var(--ease);
+}
+
+.banner span {
+  flex: 1;
+}
+
+/* ---------- Memory meter ---------- */
+
+.meter {
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.meter-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.meter-label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12.5px;
+}
+
+.meter-total {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.bar {
+  display: flex;
+  height: 8px;
+  margin: 14px 0 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+
+.bar span {
+  height: 100%;
+  transition: width 500ms var(--ease);
+}
+
+.bar-app,
+.swatch.app {
+  background: var(--accent);
+}
+
+.bar-web,
+.swatch.web {
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.legend {
+  display: flex;
+  gap: 20px;
+  color: var(--text-muted);
+  font-size: 12.5px;
+}
+
+.legend b {
+  margin-left: 4px;
+  color: var(--text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.swatch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 2px;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}

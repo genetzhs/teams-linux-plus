@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Toast</title>
+    <link rel="stylesheet" href="../_shared/ui/theme.css">
+    <style>
+        /* The window is transparent; the card paints itself with rounded corners. */
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        body {
+            padding: 4px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toast {
+            position: relative;
+            display: flex;
+            gap: 12px;
+            height: 100%;
+            padding: 14px 16px 14px 14px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            transition: background 140ms var(--ease), transform 140ms var(--ease);
+            animation: ui-slide-in 240ms var(--ease);
+        }
+
+        /* Accent stripe on the leading edge. */
+        .toast::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 3px;
+            background: var(--accent);
+        }
+
+        body:hover .toast {
+            background: var(--surface-hover);
+        }
+
+        body:active .toast {
+            transform: scale(0.99);
+        }
+
+        .toast > img {
+            flex: none;
+            width: 32px;
+            height: 32px;
+            margin-top: 1px;
+            border-radius: 9px;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .meta {
+            color: var(--text-subtle);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .title {
+            overflow: hidden;
+            font-size: 14px;
+            font-weight: 650;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #body {
+            display: -webkit-box;
+            overflow: hidden;
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-wrap: break-word;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="toast">
+        <img src="../assets/icons/icon-96x96.png" alt="">
+        <div class="content">
+            <span class="meta">Teams for Linux · now</span>
+            <div class="title" id="title"></div>
+            <p id="body"></p>
+        </div>
+    </div>
+
+    <script>
+        globalThis.notificationApi.onNotificationToastInit((data) => {
+            document.getElementById('title').innerText = data.title || 'Teams';
+            document.getElementById('body').innerText = data.body || '';
+        });
+
+        document.body.addEventListener('click', () => {
+            globalThis.notificationApi.notifyClick();
+        });
+    </script>
+</body>
+
+</html>
