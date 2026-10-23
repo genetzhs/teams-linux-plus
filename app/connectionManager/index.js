@@ -52,7 +52,20 @@ class ConnectionManager {
     powerMonitor.on("resume", boundRefresh);
     this.window.webContents.on("did-fail-load", boundDidFailLoad);
 
-    this.refresh();
+    this.initialLoad();
+  }
+
+  // The first load skips the connectivity sweep: the sweep's HTTPS probe costs
+  // a full round trip (0.6-0.8s) on every launch before Teams starts loading.
+  // Starting offline is still covered, since a failed load schedules a
+  // debounced refresh, which runs the sweep before retrying.
+  async initialLoad() {
+    _ConnectionManager_isRefreshing.set(this, true);
+    try {
+      await this.load(false);
+    } finally {
+      _ConnectionManager_isRefreshing.set(this, false);
+    }
   }
 
   cleanup() {

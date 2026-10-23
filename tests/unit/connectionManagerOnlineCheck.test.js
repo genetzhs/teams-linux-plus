@@ -188,8 +188,8 @@ describe('ConnectionManager did-fail-load retry scheduling', () => {
 	});
 
 	// Drives start() far enough to capture the registered did-fail-load handler.
-	// refresh() is stubbed out because start() kicks one off and the sweep is
-	// covered by the tests above.
+	// initialLoad() is stubbed out because start() kicks one off and the load is not
+	// what these tests exercise.
 	function managerWithFakeWindow() {
 		const ConnectionManager = require('../../app/connectionManager');
 		const manager = new ConnectionManager();
@@ -203,7 +203,7 @@ describe('ConnectionManager did-fail-load retry scheduling', () => {
 				getURL: () => '',
 			},
 		};
-		manager.refresh = () => {};
+		manager.initialLoad = () => {};
 		manager.start('https://teams.cloud.microsoft', {
 			window,
 			config: { url: 'https://teams.cloud.microsoft' },
@@ -270,13 +270,12 @@ describe('ConnectionManager refresh on a loaded page', () => {
 				getURL: () => 'https://teams.cloud.microsoft/v2/',
 			},
 		};
-		const realRefresh = manager.refresh;
-		manager.refresh = () => {};
+		manager.initialLoad = () => {};
 		manager.start('https://teams.cloud.microsoft', {
 			window,
 			config: { url: 'https://teams.cloud.microsoft' },
 		});
-		manager.refresh = realRefresh;
+		delete manager.initialLoad;
 		let online = true;
 		manager.isOnline = async () => online;
 		return {
