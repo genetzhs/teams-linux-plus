@@ -126,22 +126,28 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      upload: ${{ steps.release.outputs.upload }}
     steps:
       - name: Check out Git repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Create the draft release if missing
+        id: release
         run: |
           version="$(node -p 'require("./package.json").version')"
           tag="v${version}"
-          existing="$(gh release list --repo "$GITHUB_REPOSITORY" --limit 100 --json tagName,isDraft \
-            --jq "[.[] | select(.tagName == \"${tag}\")] | length")"
-          if [ "${existing}" != "0" ]; then
-            echo "Release ${tag} already exists; package jobs will upload to it."
-          else
+          is_draft="$(gh release list --repo "$GITHUB_REPOSITORY" --limit 100 --json tagName,isDraft \
+            --jq "[.[] | select(.tagName == \"${tag}\")] | if length == 0 then \"missing\" else .[0].isDraft end")"
+          if [ "${is_draft}" = "missing" ]; then
             gh release create "${tag}" --repo "$GITHUB_REPOSITORY" --draft \
               --title "${version}" --target "$GITHUB_SHA" --notes ""
             echo "Created draft release ${tag}."
+            is_draft=true
           fi
+          # A published release keeps the packages it shipped with: pushes
+          # that do not bump the version build but upload nothing.
+          echo "upload=${is_draft}" >> "$GITHUB_OUTPUT"
+          echo "Release ${tag}: upload=${is_draft}"
 
   linux_x64:
     needs: [lint_and_audit, prepare_release]
@@ -173,11 +179,11 @@ jobs:
         run: npm run generate-release-info
 
       - name: Build for Release
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && needs.prepare_release.outputs.upload == 'true'
         run: npm run dist:linux:x64 -- --publish always
 
       - name: Build for PR
-        if: github.ref != 'refs/heads/main'
+        if: github.ref != 'refs/heads/main' || needs.prepare_release.outputs.upload != 'true'
         run: npm run dist:linux:x64 -- --publish never
 
       - name: Smoke-launch the packaged app
@@ -249,11 +255,11 @@ jobs:
         run: npm run generate-release-info
 
       - name: Build for Release
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && needs.prepare_release.outputs.upload == 'true'
         run: npm run dist:linux:arm64 -- --publish always
 
       - name: Build for PR
-        if: github.ref != 'refs/heads/main'
+        if: github.ref != 'refs/heads/main' || needs.prepare_release.outputs.upload != 'true'
         run: npm run dist:linux:arm64 -- --publish never
 
       - name: Upload PR artifacts
@@ -319,11 +325,11 @@ jobs:
       # updater is AppImage-only today (app/autoUpdater/index.js), so nothing
       # reads it yet — this just keeps it correct if that ever changes.
       - name: Build for Release
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && needs.prepare_release.outputs.upload == 'true'
         run: npm run dist:mac -- --publish always
 
       - name: Build for PR
-        if: github.ref != 'refs/heads/main'
+        if: github.ref != 'refs/heads/main' || needs.prepare_release.outputs.upload != 'true'
         run: npm run dist:mac -- --publish never
 
       - name: Upload PR artifacts (x64)
@@ -378,11 +384,11 @@ jobs:
         run: npm run generate-release-info
 
       - name: Build for Release
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && needs.prepare_release.outputs.upload == 'true'
         run: npm run dist:windows -- --publish always
 
       - name: Build for PR
-        if: github.ref != 'refs/heads/main'
+        if: github.ref != 'refs/heads/main' || needs.prepare_release.outputs.upload != 'true'
         run: npm run dist:windows -- --publish never
 
       - name: Upload PR artifacts
