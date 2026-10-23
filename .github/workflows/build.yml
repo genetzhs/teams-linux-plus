@@ -394,3 +394,27 @@ jobs:
           retention-days: 30
           compression-level: 6
 
+
+  # Publishes the draft once every package job has uploaded to it, so a push
+  # to main that bumps the version ends in a live release the AppImage
+  # updater can see (it ignores drafts). A release that is already published
+  # is left alone.
+  publish_release:
+    needs: [prepare_release, linux_x64, linux_arm64, dmg, exe]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Publish the release
+        run: |
+          tag="v$(node -p 'require("./package.json").version')"
+          is_draft="$(gh release view "${tag}" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft)"
+          if [ "${is_draft}" = "true" ]; then
+            gh release edit "${tag}" --repo "$GITHUB_REPOSITORY" --draft=false --latest
+            echo "Published ${tag}."
+          else
+            echo "Release ${tag} is already published."
+          fi

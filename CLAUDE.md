@@ -272,7 +272,7 @@ When a PR has review comments, address them proactively:
 - Cross-platform compatibility is essential (Linux primary, Windows/macOS supported)
 - A PR showing `BLOCKED` with every check green usually means the `block develop` ruleset's CodeQL requirement is unmet: runs from bots and first-time contributors sit in `action_required` and need "Approve and run workflows", so CodeQL never reports
 - `gh run list` is often refused by the permission classifier; `gh api repos/{owner}/{repo}/actions/runs` works
-- A merged release-please PR produces a **draft** release (`releaseType: draft` in `package.json`). It is published by hand, ships as a pre-release, and `releases/latest` keeps pointing at the previous version until it is promoted
+- A push to `main` builds into a draft release for the `package.json` version, and the `publish_release` job in `build.yml` publishes it as latest once every package job has uploaded. To ship, bump the version (plus the appdata release notes) and push; the AppImage updater only sees published releases
 
 ## Additional Resources
 
